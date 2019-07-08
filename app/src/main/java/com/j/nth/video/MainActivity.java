@@ -11,6 +11,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
@@ -29,13 +31,19 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        if (android.os.Build.VERSION.SDK_INT >= 21){
+            Window window = getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            window.setStatusBarColor(getResources().getColor(R.color.colorAccent));
+        }
         //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         getSupportActionBar().hide();
         connect();
         if(isStoragePermissionGranted()) {
             media = new cslMedia(this);
             listVideo = media.getAllMedia();
-            Toast.makeText(MainActivity.this,listVideo.size()+"",Toast.LENGTH_LONG).show();
+           // Toast.makeText(MainActivity.this,listVideo.size()+"",Toast.LENGTH_LONG).show();
             _adapter = new adapter(this, R.layout.itemvideo, listVideo);
             gridView.setAdapter(_adapter);
         }
